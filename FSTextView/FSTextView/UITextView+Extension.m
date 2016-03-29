@@ -267,6 +267,10 @@ static char associatedkey;
                                                     name:UITextViewTextDidChangeNotification
                                                   object:nil];
     
+    [self addObserver:self
+           forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew
+              context:nil];
+    
     [self removeObserver:self
               forKeyPath:@"contentSize"
                  context:nil];
