@@ -34,7 +34,7 @@
     
     redView.backgroundColor = [UIColor redColor];
     
-    redView.frame = CGRectMake(0, 200, self.view.bounds.size.width, 60);
+    redView.frame = CGRectMake(0, 200, self.view.bounds.size.width, 120);
     
     [self.view addSubview:redView];
     
@@ -42,8 +42,6 @@
     UITextView *textView = [[UITextView alloc] init];
     
     textView.automaticallyAdjustsTextViewHeight = YES;
-    
-    textView.minLines = @(1);
     
     textView.maxLines = @(4);
     
@@ -57,7 +55,8 @@
     
     textView.delegate = self;
     
-    textView.frame = CGRectMake(50, 10, self.view.bounds.size.width - 100, 40);
+    
+    textView.frame = CGRectMake(50, 10, self.view.bounds.size.width - 100, 35);
     
     textView.layer.cornerRadius = 5;
     

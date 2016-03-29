@@ -9,7 +9,11 @@
 #import "UITextView+Extension.h"
 #import <objc/runtime.h>
 
+@interface UITextView ()
 
+@property (nonatomic, strong) NSNumber *lastHeight;
+
+@end
 
 @implementation UITextView (Extension)
 
@@ -20,6 +24,17 @@ static char associatedkey;
     [super load];
     
     method_exchangeImplementations(class_getInstanceMethod(self.class, NSSelectorFromString(@"dealloc")), class_getInstanceMethod(self.class, @selector(selfDealloc)));
+}
+
+- (void)setLastHeight:(NSNumber *)lastHeight
+{
+    objc_setAssociatedObject(self, @selector(lastHeight), lastHeight, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+
+- (NSNumber *)lastHeight
+{
+    return objc_getAssociatedObject(self, @selector(lastHeight));
 }
 
 - (void)setBoundsBlcok:(FSBoundsChangedBlock)boundsBlcok
@@ -132,7 +147,7 @@ static char associatedkey;
     
     CGFloat height = contentSize.height - self.textContainerInset.top - self.textContainerInset.bottom;
     
-    NSInteger lineCount = round(height) / self.font.lineHeight;
+    NSInteger lineCount = (round(height) / self.font.lineHeight);
     
     /*
     if (lineCount != self.lastLineCount && lineCount >= 1)
@@ -161,20 +176,19 @@ static char associatedkey;
     
     NSInteger dLine = lineCount - self.lastLineCount.floatValue;
     
-    self.maxLines = self.maxLines.integerValue >= 2 ? self.maxLines : @(2);
+    self.maxLines = self.maxLines.integerValue >= 1 ? self.maxLines : @(1);
     
     self.minLines = self.minLines.integerValue >= 1 ? self.minLines : @(1);
     
     if (lineCount >= 1)
     {
+        __block CGRect frame = self.frame;
+        
+        CGSize textSize = [self sizeThatFits:CGSizeMake(CGRectGetWidth(self.frame), CGFLOAT_MAX)];
+        
         if ([self.lastLineCount isEqualToNumber:@(0)] && lineCount == 1)
         {
             self.lastLineCount = @(1);
-            
-            if (self.boundsBlcok)
-            {
-                self.boundsBlcok(dLine * rowHeight, self.bounds, NO);
-            }
             
             return;
         }
@@ -183,42 +197,39 @@ static char associatedkey;
         {
             if (self.boundsBlcok)
             {
-                self.boundsBlcok(dLine * rowHeight, self.bounds, NO);
+                self.boundsBlcok(self.frame.size.height - self.lastHeight.floatValue, self.bounds, NO);
             }
             
             return;
         }
         
-        if (lineCount < self.minLines.integerValue && lineCount * rowHeight < self.bounds.size.height)
-        {
-            if (self.boundsBlcok)
-            {
-                self.boundsBlcok(dLine * rowHeight, self.bounds, NO);
-            }
-            
-            return;
-        }
+//        if (lineCount <= self.minLines.integerValue && lineCount * rowHeight < self.bounds.size.height)
+//        {
+//            if (self.boundsBlcok)
+//            {
+//                self.boundsBlcok(self.frame.size.height - self.lastHeight.floatValue, self.bounds, NO);
+//            }
+//            
+//            return;
+//        }
         
         
         [UIView animateWithDuration:0.25 animations:^{
             
-            CGRect frame = self.frame;
-            
-            //  - dLine * self.textContainerInset.top -dLine * self.textContainerInset.bottom
-            
-            frame.size.height += (dLine * rowHeight);
+            frame.size.height = MAX(35, MIN(self.maxLines.intValue * rowHeight, textSize.height)) +dLine * 4;
             
             self.frame = frame;
         }];
-    }
-    
-    if (self.boundsBlcok)
-    {
-        self.boundsBlcok(dLine * rowHeight, self.bounds, YES);
+        
+        if (self.boundsBlcok)
+        {
+            self.boundsBlcok(self.frame.size.height - self.lastHeight.floatValue, self.bounds, YES);
+        }
     }
     
     self.lastLineCount = [NSNumber numberWithFloat:lineCount];
     
+    self.lastHeight = [NSNumber numberWithFloat:self.frame.size.height];
 }
 
 

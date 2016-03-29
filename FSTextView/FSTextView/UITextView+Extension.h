@@ -38,13 +38,7 @@ typedef void(^FSBoundsChangedBlock)(CGFloat contentHeightChangeValue, CGRect bou
 
 /**
  *  当automaticallyAdjustsTextViewHeight为YES时设置才有效。
- *  取值范围 >= 1  默认 == 1
- */
-@property (nonatomic, strong) NSNumber *minLines;
-
-/**
- *  当automaticallyAdjustsTextViewHeight为YES时设置才有效。
- *  取值范围 >= 2   默认 == 2
+ *  取值范围 >=  minLines   默认 == 1
  *  当输入内容的行数 > maxLines时，textView的高度达到最大值，textView的内容可滚动。
  */
 @property (nonatomic, strong) NSNumber *maxLines;
