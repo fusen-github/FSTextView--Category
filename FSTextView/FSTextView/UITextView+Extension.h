@@ -31,18 +31,22 @@ typedef void(^FSBoundsChangedBlock)(CGFloat contentHeightChangeValue, CGRect bou
 @property (nonatomic, strong) NSDictionary *placeholderAttribute;
 
 /**
- *  根据输入内容自动调整textView的高度。
+ *  根据输入内容自动调整textView的高度。默认是 NO
  */
 @property (nonatomic, assign) BOOL automaticallyAdjustsTextViewHeight;
 
 
-/**
- *  当automaticallyAdjustsTextViewHeight为YES时设置才有效。
- *  取值范围 >=  minLines   默认 == 1
- *  当输入内容的行数 > maxLines时，textView的高度达到最大值，textView的内容可滚动。
- */
-@property (nonatomic, strong) NSNumber *maxLines;
+///**
+// *  当automaticallyAdjustsTextViewHeight为YES时设置才有效。
+// *  取值范围 >=  minLines   默认 == 1
+// *  当输入内容的行数 > maxLines时，textView的高度达到最大值，textView的内容可滚动。
+// */
+//@property (nonatomic, strong) NSNumber *maxLines;
 
+/**
+ *  textView最大的高度。和 maxLines 属性的效果一样，用来替代 maxLines 属性
+ */
+@property (nonatomic, strong) NSNumber *maxHeight;
 
 /**
  *  当automaticallyAdjustsTextViewHeight为YES时设置才有效。

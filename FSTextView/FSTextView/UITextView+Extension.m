@@ -26,11 +26,20 @@ static char associatedkey;
     method_exchangeImplementations(class_getInstanceMethod(self.class, NSSelectorFromString(@"dealloc")), class_getInstanceMethod(self.class, @selector(selfDealloc)));
 }
 
+- (void)setMaxHeight:(NSNumber *)maxHeight
+{
+    objc_setAssociatedObject(self, @selector(maxHeight), maxHeight, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSNumber *)maxHeight
+{
+    return objc_getAssociatedObject(self, @selector(maxHeight));
+}
+
 - (void)setLastHeight:(NSNumber *)lastHeight
 {
     objc_setAssociatedObject(self, @selector(lastHeight), lastHeight, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
 
 - (NSNumber *)lastHeight
 {
@@ -138,6 +147,7 @@ static char associatedkey;
     [self setNeedsDisplay];
 }
 
+// 需要继续优化。
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary<NSString *,id> *)change
@@ -172,8 +182,9 @@ static char associatedkey;
      */
     
     // 行高。
-    CGFloat rowHeight = [self.text sizeWithAttributes:@{NSFontAttributeName:self.font}].height;
+//    CGFloat rowHeight = [self.text sizeWithAttributes:@{NSFontAttributeName:self.font}].height;
     
+    // 判断是输入还是删除 > 0 是输入。< 0 是删除。
     NSInteger dLine = lineCount - self.lastLineCount.floatValue;
     
     self.maxLines = self.maxLines.integerValue >= 1 ? self.maxLines : @(1);
@@ -193,30 +204,23 @@ static char associatedkey;
             return;
         }
         
-        if (lineCount > self.maxLines.integerValue)
+        if (self.frame.size.height >= self.maxHeight.floatValue && dLine > 0)
         {
             if (self.boundsBlcok)
             {
-                self.boundsBlcok(self.frame.size.height - self.lastHeight.floatValue, self.bounds, NO);
+                self.boundsBlcok(0, self.bounds, NO);
             }
             
             return;
         }
         
-//        if (lineCount <= self.minLines.integerValue && lineCount * rowHeight < self.bounds.size.height)
-//        {
-//            if (self.boundsBlcok)
-//            {
-//                self.boundsBlcok(self.frame.size.height - self.lastHeight.floatValue, self.bounds, NO);
-//            }
-//            
-//            return;
-//        }
-        
-        
         [UIView animateWithDuration:0.25 animations:^{
             
-            frame.size.height = MAX(35, MIN(self.maxLines.intValue * rowHeight, textSize.height)) +dLine * 4;
+            // + self.textContainerInset.top
+            
+            CGFloat height = MAX(35, MIN(self.maxHeight.floatValue,textSize.height));
+            
+            frame.size.height = MIN(height, self.maxHeight.floatValue);
             
             self.frame = frame;
         }];

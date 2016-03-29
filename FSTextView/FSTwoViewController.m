@@ -43,7 +43,7 @@
     
     textView.automaticallyAdjustsTextViewHeight = YES;
     
-    textView.maxLines = @(4);
+    textView.maxHeight = @(100);
     
     textView.delegate = self;
     
