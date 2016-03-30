@@ -31,7 +31,7 @@ typedef void(^FSBoundsChangedBlock)(CGFloat contentHeightChangeValue, CGRect bou
 @property (nonatomic, strong) NSDictionary *placeholderAttribute;
 
 /**
- *  根据输入内容自动调整textView的高度。默认是 NO
+ *  根据输入内容自动调整textView的高度。默认是 NO.
  */
 @property (nonatomic, assign) BOOL automaticallyAdjustsTextViewHeight;
 

@@ -8,6 +8,7 @@
 
 #import "FSTwoViewController.h"
 #import "UITextView+Extension.h"
+#import "FSTextView.h"
 
 
 @interface FSTwoViewController ()<UITextViewDelegate>
@@ -34,12 +35,16 @@
     
     redView.backgroundColor = [UIColor redColor];
     
-    redView.frame = CGRectMake(0, 200, self.view.bounds.size.width, 120);
+    redView.frame = CGRectMake(0, 200, self.view.bounds.size.width, 55);
     
     [self.view addSubview:redView];
     
     
-    UITextView *textView = [[UITextView alloc] init];
+//    FSTextView *textView = [[FSTextView alloc] initWithFrame:CGRectMake(50, 10, self.view.bounds.size.width - 100, 35)];
+    
+//    UITextView *textView = [[UITextView alloc] init];
+    
+    FSTextView *textView = [[FSTextView alloc] init];
     
     textView.automaticallyAdjustsTextViewHeight = YES;
     
@@ -54,7 +59,6 @@
     textView.placeholderAttribute = @{NSForegroundColorAttributeName : [UIColor redColor]};
     
     textView.delegate = self;
-    
     
     textView.frame = CGRectMake(50, 10, self.view.bounds.size.width - 100, 35);
     

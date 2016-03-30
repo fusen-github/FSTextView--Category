@@ -23,8 +23,16 @@ static char associatedkey;
 {
     [super load];
     
-    method_exchangeImplementations(class_getInstanceMethod(self.class, NSSelectorFromString(@"dealloc")), class_getInstanceMethod(self.class, @selector(selfDealloc)));
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+
+        // 利用运行时交换方法执行，在分类里面，是先执行主类，再执行分类。
+        method_exchangeImplementations(class_getInstanceMethod(self.class, NSSelectorFromString(@"dealloc")), class_getInstanceMethod(self.class, @selector(selfDealloc)));
+        
+//        method_exchangeImplementations(class_getInstanceMethod(self.class, NSSelectorFromString(@"initWithFrame:textContainer:")), class_getInstanceMethod(self.class, @selector(selfInitWithFrame:textContainer:)));
+    });
 }
+
 
 - (void)setMaxHeight:(NSNumber *)maxHeight
 {
@@ -104,25 +112,22 @@ static char associatedkey;
                forKeyPath:@"contentSize"
                   options:NSKeyValueObservingOptionNew
                   context:nil];
+        
+        objc_setAssociatedObject(self, &associatedkey, [NSNumber numberWithBool:automaticallyAdjustsTextViewHeight], OBJC_ASSOCIATION_ASSIGN);
     }
-    
-    objc_setAssociatedObject(self, &associatedkey, @(automaticallyAdjustsTextViewHeight), OBJC_ASSOCIATION_ASSIGN);
 }
 
 
 - (BOOL)automaticallyAdjustsTextViewHeight
 {
-    return objc_getAssociatedObject(self, &associatedkey);
+    BOOL result = objc_getAssociatedObject(self, &associatedkey);
+    
+    return result;
 }
 
 
 - (void)setPlaceholder:(NSString *)placeholder
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(textDidChanged:)
-                                                 name:UITextViewTextDidChangeNotification
-                                               object:nil];
-    
     objc_setAssociatedObject(self, @selector(placeholder), placeholder, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
@@ -133,6 +138,11 @@ static char associatedkey;
 
 - (void)setPlaceholderAttribute:(NSDictionary *)placeholderAttribute
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(textDidChanged:)
+                                                 name:UITextViewTextDidChangeNotification
+                                               object:nil];
+    
     objc_setAssociatedObject(self, @selector(placeholderAttribute), placeholderAttribute, OBJC_ASSOCIATION_RETAIN);
 }
 
@@ -147,6 +157,29 @@ static char associatedkey;
     [self setNeedsDisplay];
 }
 
+/*
+ if (lineCount != self.lastLineCount && lineCount >= 1)
+ {
+ if (lineCount == 1 && self.lastLineCount == 0)
+ {
+ return;
+ }
+ 
+ CGSize size = [self.text sizeWithAttributes:@{NSFontAttributeName:self.font}];
+ 
+ CGFloat addHeight = lineCount > self.lastLineCount ? size.height : -size.height;
+ 
+ 
+ [UIView animateWithDuration:0.25 animations:^{
+ 
+ //            self.toolBar.frame = CGRectMake(0, toolBarY - addHeight, self.view.bounds.size.width, self.lastToolBarH + addHeight);
+ //
+ //            textView.frame = CGRectMake(60, 10, self.toolBar.bounds.size.width - 120, self.toolBar.bounds.size.height - 20);
+ }];
+ }
+ */
+
+
 // 需要继续优化。
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
@@ -158,28 +191,6 @@ static char associatedkey;
     CGFloat height = contentSize.height - self.textContainerInset.top - self.textContainerInset.bottom;
     
     NSInteger lineCount = (round(height) / self.font.lineHeight);
-    
-    /*
-    if (lineCount != self.lastLineCount && lineCount >= 1)
-    {
-        if (lineCount == 1 && self.lastLineCount == 0)
-        {
-            return;
-        }
-        
-        CGSize size = [self.text sizeWithAttributes:@{NSFontAttributeName:self.font}];
-        
-        CGFloat addHeight = lineCount > self.lastLineCount ? size.height : -size.height;
-        
-        
-        [UIView animateWithDuration:0.25 animations:^{
-            
-//            self.toolBar.frame = CGRectMake(0, toolBarY - addHeight, self.view.bounds.size.width, self.lastToolBarH + addHeight);
-//            
-//            textView.frame = CGRectMake(60, 10, self.toolBar.bounds.size.width - 120, self.toolBar.bounds.size.height - 20);
-        }];
-    }
-     */
     
     // 行高。
 //    CGFloat rowHeight = [self.text sizeWithAttributes:@{NSFontAttributeName:self.font}].height;
@@ -282,13 +293,12 @@ static char associatedkey;
                                                     name:UITextViewTextDidChangeNotification
                                                   object:nil];
     
-    [self addObserver:self
-           forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew
-              context:nil];
-    
-    [self removeObserver:self
-              forKeyPath:@"contentSize"
-                 context:nil];
+    if (self.automaticallyAdjustsTextViewHeight)
+    {
+        [self removeObserver:self
+                  forKeyPath:@"contentSize"
+                     context:nil];
+    }
 }
 
 

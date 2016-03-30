@@ -17,6 +17,7 @@
 		04BA29401CAA1FB100DEBDDF /* FSTwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA293B1CAA1FB100DEBDDF /* FSTwoViewController.m */; };
 		04BA29421CAA1FB100DEBDDF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA293F1CAA1FB100DEBDDF /* ViewController.m */; };
 		04BA29461CAA1FE600DEBDDF /* UITextView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA29451CAA1FE600DEBDDF /* UITextView+Extension.m */; };
+		04BA29AC1CABA82100DEBDDF /* FSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA29AB1CABA82100DEBDDF /* FSTextView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,8 @@
 		04BA293F1CAA1FB100DEBDDF /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		04BA29441CAA1FE600DEBDDF /* UITextView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+Extension.h"; sourceTree = "<group>"; };
 		04BA29451CAA1FE600DEBDDF /* UITextView+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Extension.m"; sourceTree = "<group>"; };
+		04BA29AA1CABA82100DEBDDF /* FSTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTextView.h; sourceTree = "<group>"; };
+		04BA29AB1CABA82100DEBDDF /* FSTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSTextView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,8 @@
 				04BA290B1CAA1F7300DEBDDF /* AppDelegate.m */,
 				04BA293E1CAA1FB100DEBDDF /* ViewController.h */,
 				04BA293F1CAA1FB100DEBDDF /* ViewController.m */,
+				04BA29AA1CABA82100DEBDDF /* FSTextView.h */,
+				04BA29AB1CABA82100DEBDDF /* FSTextView.m */,
 				04BA293A1CAA1FB100DEBDDF /* FSTwoViewController.h */,
 				04BA293B1CAA1FB100DEBDDF /* FSTwoViewController.m */,
 				04BA29101CAA1F7300DEBDDF /* Main.storyboard */,
@@ -292,6 +297,7 @@
 				04BA29461CAA1FE600DEBDDF /* UITextView+Extension.m in Sources */,
 				04BA290C1CAA1F7300DEBDDF /* AppDelegate.m in Sources */,
 				04BA29091CAA1F7300DEBDDF /* main.m in Sources */,
+				04BA29AC1CABA82100DEBDDF /* FSTextView.m in Sources */,
 				04BA29421CAA1FB100DEBDDF /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -518,6 +524,7 @@
 				04BA29331CAA1F7300DEBDDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		04BA29341CAA1F7300DEBDDF /* Build configuration list for PBXNativeTarget "FSTextViewTests" */ = {
 			isa = XCConfigurationList;
@@ -526,6 +533,7 @@
 				04BA29361CAA1F7300DEBDDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		04BA29371CAA1F7300DEBDDF /* Build configuration list for PBXNativeTarget "FSTextViewUITests" */ = {
 			isa = XCConfigurationList;
@@ -534,6 +542,7 @@
 				04BA29391CAA1F7300DEBDDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
